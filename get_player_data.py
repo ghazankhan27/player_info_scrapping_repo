@@ -19,9 +19,18 @@ def get_data():
 
     # Variables
     player_data = []
-    player_data_QB = []
-    player_data_RB = []
-    player_data_WR_TE = []
+    player_data_QB_rookie = []
+    player_data_QB_sophomore = []
+    player_data_QB_3rd_year = []
+    player_data_RB_rookie = []
+    player_data_RB_sophomore = []
+    player_data_RB_3rd_year = []
+    player_data_WR_rookie = []
+    player_data_WR_sophomore = []
+    player_data_WR_3rd_year = []
+    player_data_TE_rookie = []
+    player_data_TE_sophomore = []
+    player_data_TE_3rd_year = []
     accepted_positions = ["QB", "RB", "WR", "TE"]
     max_experience_years = 3
 
@@ -39,8 +48,10 @@ def get_data():
     player_table_body = player_table.find("tbody")
     player_table_body_rows = player_table_body.find_all("tr")
 
+    i = 0
     # Go through each player to get the data required
     for row in player_table_body_rows:
+        i = i + 1
 
         # Check if row contains player data
         is_head = row.get("class")
@@ -238,8 +249,15 @@ def get_data():
                             "recent_stats": recent_game_stats,
                             "season_stats": season_stats,
                         }
-                        print(player_data_obj)
-                        player_data.append(player_data_obj)
+
+                        if player_years_experience == 1:
+                            player_data_QB_rookie.append(player_data_obj)
+                        elif player_years_experience == 2:
+                            player_data_QB_sophomore.append(player_data_obj)
+                        else:
+                            player_data_QB_3rd_year.append(player_data_obj)
+
+                        print(i, player_data_obj)
 
                     # Scrape data for position:RB
                     elif player_position == "RB":
@@ -328,8 +346,14 @@ def get_data():
                             "season_stats": season_stats,
                         }
 
-                        player_data.append(player_data_obj)
-                        print(player_data_obj)
+                        if player_years_experience == 1:
+                            player_data_RB_rookie.append(player_data_obj)
+                        elif player_years_experience == 2:
+                            player_data_RB_sophomore.append(player_data_obj)
+                        else:
+                            player_data_RB_3rd_year.append(player_data_obj)
+
+                        print(i, player_data_obj)
 
                     # Scrape data for position: TE or WR
                     else:
@@ -390,13 +414,55 @@ def get_data():
                             "season_stats": season_stats,
                         }
 
-                        player_data.append(player_data_obj)
+                        if player_position == "WR":
+                            if player_years_experience == 1:
+                                player_data_WR_rookie.append(player_data_obj)
+                            elif player_years_experience == 2:
+                                player_data_WR_sophomore.append(player_data_obj)
+                            else:
+                                player_data_WR_3rd_year.append(player_data_obj)
 
-                        print(player_data_obj)
+                            print(i, player_data_obj)
+                        else:
+                            if player_years_experience == 1:
+                                player_data_TE_rookie.append(player_data_obj)
+                            elif player_years_experience == 2:
+                                player_data_TE_sophomore.append(player_data_obj)
+                            else:
+                                player_data_TE_3rd_year.append(player_data_obj)
+
+                            print(i, player_data_obj)
             else:
                 continue
         else:
             continue
+
+    player_info_QB_total = {
+        "position": "QB",
+        "rookie": player_data_QB_rookie,
+        "sophomore": player_data_QB_sophomore,
+        "3rd_year": player_data_QB_3rd_year,
+    }
+    player_info_RB_total = {
+        "position": "RB",
+        "rookie": player_data_RB_rookie,
+        "sophomore": player_data_RB_sophomore,
+        "3rd_year": player_data_RB_3rd_year,
+    }
+    player_info_WR_total = {
+        "position": "WR",
+        "rookie": player_data_WR_rookie,
+        "sophomore": player_data_WR_sophomore,
+        "3rd_year": player_data_WR_3rd_year,
+    }
+    player_info_TE_total = {
+        "position": "TE",
+        "rookie": player_data_TE_rookie,
+        "sophomore": player_data_TE_sophomore,
+        "3rd_year": player_data_TE_3rd_year,
+    }
+
+    print(player_info_TE_total)
 
 
 get_data()

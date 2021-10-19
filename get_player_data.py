@@ -167,32 +167,59 @@ def get_data():
 
                 else:
 
+                    # Define age group i.e rookie/sophomore/3rd_year
+                    if player_years_experience == 1:
+                        age_group = "rookie"
+                    elif player_years_experience == 2:
+                        age_group = "sophomore"
+                    else:
+                        age_group = "3rd year"
+
                     # Player data is valid and should be scrapped, position : QB
                     if player_position == "QB":
+
+                        # Creating the object for the player
+                        player_data_obj = {
+                            "name": player_name,
+                            "age": player_age,
+                            "team": player_team,
+                            "position": player_position,
+                            "age_group": age_group,
+                        }
 
                         # Scrapping season stats
                         for column in player_season_stat_table_body_columns:
                             column_name = column.get("data-stat")
 
                             if column_name == "pass_cmp_perc":
-                                player_pass_cmp_perc = str(column.text)
-                                season_stats.append(player_pass_cmp_perc)
+                                season_player_pass_cmp_perc = str(column.text)
+                                player_data_obj[
+                                    "season_player_pass_cmp_perc"
+                                ] = season_player_pass_cmp_perc
                                 continue
                             if column_name == "pass_yds":
-                                player_pass_yds = str(column.text)
-                                season_stats.append(player_pass_yds)
+                                season_player_pass_yds = str(column.text)
+                                player_data_obj[
+                                    "season_player_pass_yds"
+                                ] = season_player_pass_yds
                                 continue
                             if column_name == "pass_td":
-                                player_pass_td = str(column.text)
-                                season_stats.append(player_pass_td)
+                                season_player_pass_td = str(column.text)
+                                player_data_obj[
+                                    "season_player_pass_td"
+                                ] = season_player_pass_td
                                 continue
                             if column_name == "pass_int":
-                                player_pass_int = str(column.text)
-                                season_stats.append(player_pass_int)
+                                season_player_pass_int = str(column.text)
+                                player_data_obj[
+                                    "season_player_pass_int"
+                                ] = season_player_pass_int
                                 continue
                             if column_name == "pass_rating":
-                                player_pass_rating = str(column.text)
-                                season_stats.append(player_pass_rating)
+                                season_player_pass_rating = str(column.text)
+                                player_data_obj[
+                                    "season_player_pass_rating"
+                                ] = season_player_pass_rating
                                 break
 
                         # Scrapping recent game stats
@@ -200,95 +227,111 @@ def get_data():
                             column_name = column.get("data-stat")
 
                             if column_name == "pass_cmp":
-                                player_pass_cmp = str(column.text)
-                                recent_game_stats.append(player_pass_cmp)
+                                recent_player_pass_cmp = str(column.text)
+                                player_data_obj[
+                                    "recent_player_pass_cmp"
+                                ] = recent_player_pass_cmp
                                 continue
                             if column_name == "pass_att":
-                                player_pass_att = str(column.text)
-                                recent_game_stats.append(player_pass_att)
+                                recent_player_pass_att = str(column.text)
+                                player_data_obj[
+                                    "recent_player_pass_att"
+                                ] = recent_player_pass_att
                                 continue
                             if column_name == "pass_yds":
-                                player_pass_yds = str(column.text)
-                                recent_game_stats.append(player_pass_yds)
+                                recent_player_pass_yds = str(column.text)
+                                player_data_obj[
+                                    "recent_player_pass_yds"
+                                ] = recent_player_pass_yds
                                 continue
                             if column_name == "pass_td":
-                                player_pass_td = str(column.text)
-                                recent_game_stats.append(player_pass_td)
+                                recent_player_pass_td = str(column.text)
+                                player_data_obj[
+                                    "recent_player_pass_td"
+                                ] = recent_player_pass_td
                                 continue
                             if column_name == "pass_int":
-                                player_pass_int = str(column.text)
-                                recent_game_stats.append(player_pass_int)
+                                recent_player_pass_int = str(column.text)
+                                player_data_obj[
+                                    "recent_player_pass_int"
+                                ] = recent_player_pass_int
                                 continue
                             if column_name == "pass_rating":
-                                player_pass_rating = str(column.text)
-                                recent_game_stats.append(player_pass_rating)
-                                continue
-                            if column_name == "pass_rating":
-                                player_pass_rating = str(column.text)
-                                recent_game_stats.append(player_pass_rating)
+                                recent_player_pass_rating = str(column.text)
+                                player_data_obj[
+                                    "recent_player_pass_rating"
+                                ] = recent_player_pass_rating
                                 continue
                             if column_name == "rush_att":
-                                player_rush_att = str(column.text)
-                                recent_game_stats.append(player_rush_att)
+                                recent_player_rush_att = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_att"
+                                ] = recent_player_rush_att
                                 continue
                             if column_name == "rush_yds":
-                                player_rush_yds = str(column.text)
-                                recent_game_stats.append(player_rush_yds)
+                                recent_player_rush_yds = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_yds"
+                                ] = recent_player_rush_yds
                                 continue
                             if column_name == "rush_td":
-                                player_rush_td = str(column.text)
-                                recent_game_stats.append(player_rush_td)
+                                recent_player_rush_td = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_td"
+                                ] = recent_player_rush_td
                                 break
-
-                        # Creating the object for the player
-                        player_data_obj = {
-                            "name": player_name,
-                            "age": player_age,
-                            "team": player_team,
-                            "position": player_position,
-                            "recent_stats": recent_game_stats,
-                            "season_stats": season_stats,
-                        }
-
-                        if player_years_experience == 1:
-                            player_data_QB_rookie.append(player_data_obj)
-                        elif player_years_experience == 2:
-                            player_data_QB_sophomore.append(player_data_obj)
-                        else:
-                            player_data_QB_3rd_year.append(player_data_obj)
 
                         print(i, player_data_obj)
 
                     # Scrape data for position:RB
                     elif player_position == "RB":
 
+                        # Creating the object for the player
+                        player_data_obj = {
+                            "name": player_name,
+                            "age": player_age,
+                            "team": player_team,
+                            "position": player_position,
+                            "age_group": age_group,
+                        }
+
                         # Scrapping season stats
                         for column in player_season_stat_table_body_columns:
                             column_name = column.get("data-stat")
 
                             if column_name == "rush_yds":
-                                player_rush_yds = str(column.text)
-                                season_stats.append(player_rush_yds)
+                                season_player_rush_yds = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_yds"
+                                ] = season_player_rush_yds
                                 continue
                             if column_name == "rush_yds_per_att":
-                                player_rush_yds_per_att = str(column.text)
-                                season_stats.append(player_rush_yds_per_att)
+                                season_player_rush_yds_per_att = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_yds_per_att"
+                                ] = season_player_rush_yds_per_att
                                 continue
                             if column_name == "targets":
-                                player_targets = str(column.text)
-                                season_stats.append(player_targets)
+                                season_player_targets = str(column.text)
+                                player_data_obj[
+                                    "season_player_targets"
+                                ] = season_player_targets
                                 continue
                             if column_name == "rec":
-                                player_rec = str(column.text)
-                                season_stats.append(player_rec)
+                                season_player_rec = str(column.text)
+                                player_data_obj["season_player_rec"] = season_player_rec
                                 continue
                             if column_name == "rec_yds":
-                                player_rec_yds = str(column.text)
-                                season_stats.append(player_rec_yds)
+                                season_player_rec_yds = str(column.text)
+                                player_data_obj[
+                                    "season_player_rec_yds"
+                                ] = season_player_rec_yds
                                 continue
                             if column_name == "rec_td":
-                                player_rec_td = str(column.text)
-                                season_stats.append(player_rec_td)
+                                season_player_rec_td = str(column.text)
+                                player_data_obj[
+                                    "season_player_rec_td"
+                                ] = season_player_rec_td
                                 break
 
                         # Scrapping recent game stats
@@ -296,87 +339,103 @@ def get_data():
                             column_name = column.get("data-stat")
 
                             if column_name == "rush_att":
-                                player_rush_att = str(column.text)
-                                recent_game_stats.append(player_rush_att)
+                                recent_player_rush_att = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_att"
+                                ] = recent_player_rush_att
                                 continue
                             if column_name == "rush_yds":
-                                player_rush_yds = str(column.text)
-                                recent_game_stats.append(player_rush_yds)
+                                recent_player_rush_yds = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_yds"
+                                ] = recent_player_rush_yds
                                 continue
                             if column_name == "rush_yds_per_att":
-                                player_rush_yds_per_att = str(column.text)
-                                recent_game_stats.append(player_rush_yds_per_att)
+                                recent_player_rush_yds_per_att = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_yds_per_att"
+                                ] = recent_player_rush_yds_per_att
                                 continue
                             if column_name == "rush_td":
-                                player_rush_td = str(column.text)
-                                recent_game_stats.append(player_rush_td)
+                                recent_player_rush_td = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_td"
+                                ] = recent_player_rush_td
                                 continue
                             if column_name == "targets":
-                                player_targets = str(column.text)
-                                recent_game_stats.append(player_targets)
+                                recent_player_targets = str(column.text)
+                                player_data_obj[
+                                    "recent_player_targets"
+                                ] = recent_player_targets
                                 continue
                             if column_name == "rec":
-                                player_rec = str(column.text)
-                                recent_game_stats.append(player_rec)
+                                recent_player_rec = str(column.text)
+                                player_data_obj["recent_player_rec"] = recent_player_rec
                                 continue
                             if column_name == "rec_yds":
-                                player_rec_yds = str(column.text)
-                                recent_game_stats.append(player_rec_yds)
+                                recent_player_rec_yds = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rec_yds"
+                                ] = recent_player_rec_yds
                                 continue
                             if column_name == "rush_att":
-                                player_rush_att = str(column.text)
-                                recent_game_stats.append(player_rush_att)
+                                recent_player_rush_att = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_att"
+                                ] = recent_player_rush_att
                                 continue
                             if column_name == "rec_td":
-                                player_rec_td = str(column.text)
-                                recent_game_stats.append(player_rec_td)
+                                recent_player_rec_td = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rec_td"
+                                ] = recent_player_rec_td
                                 continue
                             if column_name == "off_pct":
-                                player_off_pct = str(column.text)
-                                recent_game_stats.append(player_off_pct)
+                                recent_player_off_pct = str(column.text)
+                                player_data_obj[
+                                    "recent_player_off_pct"
+                                ] = recent_player_off_pct
                                 break
-
-                        # Creating the object for the player
-                        player_data_obj = {
-                            "name": player_name,
-                            "age": player_age,
-                            "team": player_team,
-                            "position": player_position,
-                            "recent_stats": recent_game_stats,
-                            "season_stats": season_stats,
-                        }
-
-                        if player_years_experience == 1:
-                            player_data_RB_rookie.append(player_data_obj)
-                        elif player_years_experience == 2:
-                            player_data_RB_sophomore.append(player_data_obj)
-                        else:
-                            player_data_RB_3rd_year.append(player_data_obj)
 
                         print(i, player_data_obj)
 
                     # Scrape data for position: TE or WR
                     else:
 
+                        # Creating the object for the player
+                        player_data_obj = {
+                            "name": player_name,
+                            "age": player_age,
+                            "team": player_team,
+                            "position": player_position,
+                            "age_group": age_group,
+                        }
+
                         # Scrapping season stats
                         for column in player_season_stat_table_body_columns:
                             column_name = column.get("data-stat")
 
                             if column_name == "targets":
-                                player_targets = str(column.text)
-                                season_stats.append(player_targets)
+                                season_player_targets = str(column.text)
+                                player_data_obj[
+                                    "season_player_targets"
+                                ] = season_player_targets
                                 continue
                             if column_name == "rec":
-                                player_rec = str(column.text)
-                                season_stats.append(player_rec)
+                                season_player_rec = str(column.text)
+                                player_data_obj["season_player_rec"] = season_player_rec
                                 continue
                             if column_name == "rec_yds":
-                                player_rec_yds = str(column.text)
-                                season_stats.append(player_rec_yds)
+                                season_player_rec_yds = str(column.text)
+                                player_data_obj[
+                                    "season_player_rec_yds"
+                                ] = season_player_rec_yds
                                 continue
                             if column_name == "rec_td":
-                                player_rec_td = str(column.text)
-                                season_stats.append(player_rec_td)
+                                season_player_rec_td = str(column.text)
+                                player_data_obj[
+                                    "season_player_rec_td"
+                                ] = season_player_rec_td
                                 break
 
                         # Scrapping recent game stats
@@ -384,85 +443,37 @@ def get_data():
                             column_name = column.get("data-stat")
 
                             if column_name == "targets":
-                                player_targets = str(column.text)
-                                recent_game_stats.append(player_targets)
+                                recent_player_targets = str(column.text)
+                                player_data_obj[
+                                    "recent_player_targets"
+                                ] = recent_player_targets
                                 continue
                             if column_name == "rec":
-                                player_rec = str(column.text)
-                                recent_game_stats.append(player_rec)
+                                recent_player_rec = str(column.text)
+                                player_data_obj["recent_player_rec"] = recent_player_rec
                                 continue
                             if column_name == "rec_yds":
-                                player_rec_yds = str(column.text)
-                                recent_game_stats.append(player_rec_yds)
+                                recent_player_rec_yds = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rec_yds"
+                                ] = recent_player_rec_yds
                                 continue
                             if column_name == "rush_td":
-                                player_rush_td = str(column.text)
-                                recent_game_stats.append(player_rush_td)
+                                recent_player_rush_td = str(column.text)
+                                player_data_obj[
+                                    "recent_player_rush_td"
+                                ] = recent_player_rush_td
                                 continue
                             if column_name == "off_pct":
-                                player_off_pct = str(column.text)
-                                recent_game_stats.append(player_off_pct)
+                                recent_player_off_pct = str(column.text)
+                                player_data_obj[
+                                    "recent_player_off_pct"
+                                ] = recent_player_off_pct
                                 break
-
-                        # Creating the object for the player
-                        player_data_obj = {
-                            "name": player_name,
-                            "age": player_age,
-                            "team": player_team,
-                            "position": player_position,
-                            "recent_stats": recent_game_stats,
-                            "season_stats": season_stats,
-                        }
-
-                        if player_position == "WR":
-                            if player_years_experience == 1:
-                                player_data_WR_rookie.append(player_data_obj)
-                            elif player_years_experience == 2:
-                                player_data_WR_sophomore.append(player_data_obj)
-                            else:
-                                player_data_WR_3rd_year.append(player_data_obj)
-
-                            print(i, player_data_obj)
-                        else:
-                            if player_years_experience == 1:
-                                player_data_TE_rookie.append(player_data_obj)
-                            elif player_years_experience == 2:
-                                player_data_TE_sophomore.append(player_data_obj)
-                            else:
-                                player_data_TE_3rd_year.append(player_data_obj)
-
-                            print(i, player_data_obj)
             else:
                 continue
         else:
             continue
-
-    player_info_QB_total = {
-        "position": "QB",
-        "rookie": player_data_QB_rookie,
-        "sophomore": player_data_QB_sophomore,
-        "3rd_year": player_data_QB_3rd_year,
-    }
-    player_info_RB_total = {
-        "position": "RB",
-        "rookie": player_data_RB_rookie,
-        "sophomore": player_data_RB_sophomore,
-        "3rd_year": player_data_RB_3rd_year,
-    }
-    player_info_WR_total = {
-        "position": "WR",
-        "rookie": player_data_WR_rookie,
-        "sophomore": player_data_WR_sophomore,
-        "3rd_year": player_data_WR_3rd_year,
-    }
-    player_info_TE_total = {
-        "position": "TE",
-        "rookie": player_data_TE_rookie,
-        "sophomore": player_data_TE_sophomore,
-        "3rd_year": player_data_TE_3rd_year,
-    }
-
-    print(player_info_TE_total)
 
 
 get_data()

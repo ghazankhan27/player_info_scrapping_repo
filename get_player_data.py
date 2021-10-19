@@ -3,6 +3,7 @@ import requests
 
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
+from requests.api import request
 
 
 def get_random_user_agent():
@@ -18,19 +19,6 @@ def get_random_user_agent():
 def get_data():
 
     # Variables
-    player_data = []
-    player_data_QB_rookie = []
-    player_data_QB_sophomore = []
-    player_data_QB_3rd_year = []
-    player_data_RB_rookie = []
-    player_data_RB_sophomore = []
-    player_data_RB_3rd_year = []
-    player_data_WR_rookie = []
-    player_data_WR_sophomore = []
-    player_data_WR_3rd_year = []
-    player_data_TE_rookie = []
-    player_data_TE_sophomore = []
-    player_data_TE_3rd_year = []
     accepted_positions = ["QB", "RB", "WR", "TE"]
     max_experience_years = 3
 
@@ -51,7 +39,6 @@ def get_data():
     i = 0
     # Go through each player to get the data required
     for row in player_table_body_rows:
-        i = i + 1
 
         # Check if row contains player data
         is_head = row.get("class")
@@ -122,10 +109,6 @@ def get_data():
             # If season stats table exists
             if player_season_stat_table != None:
 
-                # Data storage places
-                recent_game_stats = []
-                season_stats = []
-
                 # Finding recent game table and all the data objects from it
                 recent_game_stats_table = player_data_soup.find("table", id="stats")
                 recent_game_stats_table_body = recent_game_stats_table.find("tbody")
@@ -167,6 +150,7 @@ def get_data():
 
                 else:
 
+                    i = i + 1
                     # Define age group i.e rookie/sophomore/3rd_year
                     if player_years_experience == 1:
                         age_group = "rookie"
@@ -281,7 +265,12 @@ def get_data():
                                 ] = recent_player_rush_td
                                 break
 
-                        print(i, player_data_obj)
+                        try:
+                            x = requests.post(
+                                "http://127.0.0.1:8000/ep/qb/", data=player_data_obj
+                            )
+                        except Exception as e:
+                            print(e)
 
                     # Scrape data for position:RB
                     elif player_position == "RB":
@@ -397,7 +386,12 @@ def get_data():
                                 ] = recent_player_off_pct
                                 break
 
-                        print(i, player_data_obj)
+                        try:
+                            x = requests.post(
+                                "http://127.0.0.1:8000/ep/rb/", data=player_data_obj
+                            )
+                        except Exception as e:
+                            print(e)
 
                     # Scrape data for position: TE or WR
                     else:
@@ -470,10 +464,29 @@ def get_data():
                                     "recent_player_off_pct"
                                 ] = recent_player_off_pct
                                 break
+
+                        try:
+                            if player_position == "TE":
+                                x = requests.post(
+                                    "http://127.0.0.1:8000/ep/te/",
+                                    data=player_data_obj,
+                                )
+
+                            else:
+                                x = requests.post(
+                                    "http://127.0.0.1:8000/ep/wr/",
+                                    data=player_data_obj,
+                                )
+
+                        except Exception as e:
+                            print(e)
+
             else:
                 continue
         else:
             continue
+    print(i)
 
 
+requests.get("http://127.0.0.1:8000/ep/end/")
 get_data()

@@ -36,7 +36,6 @@ def get_data():
     player_table_body = player_table.find("tbody")
     player_table_body_rows = player_table_body.find_all("tr")
 
-    i = 0
     # Go through each player to get the data required
     for row in player_table_body_rows:
 
@@ -150,7 +149,6 @@ def get_data():
 
                 else:
 
-                    i = i + 1
                     # Define age group i.e rookie/sophomore/3rd_year
                     if player_years_experience == 1:
                         age_group = "rookie"
@@ -485,7 +483,6 @@ def get_data():
                 continue
         else:
             continue
-    print(i)
 
 
 requests.get("http://127.0.0.1:8000/ep/end/")

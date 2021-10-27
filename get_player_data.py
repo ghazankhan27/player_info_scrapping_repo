@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-
+import datetime as dt
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
 from requests.api import request
@@ -94,6 +94,9 @@ def get_data():
             # Get the season stats table
             if player_position == "QB":
                 player_season_stat_table = player_data_soup.find("table", id="passing")
+                player_season_rush_stat_table = player_data_soup.find(
+                    "table", id="rushing_and_receiving"
+                )
 
             elif player_position == "RB":
                 player_season_stat_table = player_data_soup.find(
@@ -128,6 +131,14 @@ def get_data():
                     recent_game_stats_required_row.find_all("td")
                 )
 
+                # Find the 'date' from the latest game's row
+                player_recent_stats_table_date = recent_game_stats_required_row.find(
+                    "th"
+                )
+                date = player_recent_stats_table_date.text
+                date = date.split("-")
+                date_correct = dt.datetime(int(date[0]), int(date[1]), int(date[2]))
+
                 # Finding the season stats table and getting all data objects from it
                 player_season_stat_table_body = player_season_stat_table.find("tbody")
                 player_season_stat_table_body_rows = (
@@ -160,6 +171,22 @@ def get_data():
                     # Player data is valid and should be scrapped, position : QB
                     if player_position == "QB":
 
+                        # Get data values from the player_season_rush_stat_table
+                        player_season_rush_stat_table_body = (
+                            player_season_rush_stat_table.find("tbody")
+                        )
+                        player_season_rush_stat_table_body_rows = (
+                            player_season_rush_stat_table_body.find_all("tr")
+                        )
+                        player_season_rush_stat_table_body_rows_latest_row = (
+                            player_season_rush_stat_table_body_rows[-1]
+                        )
+                        player_season_rush_stat_columns = (
+                            player_season_rush_stat_table_body_rows_latest_row.find_all(
+                                "td"
+                            )
+                        )
+
                         # Creating the object for the player
                         player_data_obj = {
                             "name": player_name,
@@ -167,6 +194,7 @@ def get_data():
                             "team": player_team,
                             "position": player_position,
                             "age_group": age_group,
+                            "recent_player_game_date": date_correct,
                         }
 
                         # Scrapping season stats
@@ -263,6 +291,29 @@ def get_data():
                                 ] = recent_player_rush_td
                                 break
 
+                        # Scrapping season rushing and receiving game stats
+                        for column in player_season_rush_stat_columns:
+                            column_name = column.get("data-stat")
+
+                            if column_name == "rush_att":
+                                season_player_rush_rush_att = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_rush_att"
+                                ] = season_player_rush_rush_att
+                                continue
+                            if column_name == "rush_yds":
+                                season_player_rush_rush_yds = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_rush_yds"
+                                ] = season_player_rush_rush_yds
+                                continue
+                            if column_name == "rush_td":
+                                season_player_rush_rush_td = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_rush_td"
+                                ] = season_player_rush_rush_td
+                                continue
+
                         try:
                             x = requests.post(
                                 "http://127.0.0.1:8000/ep/qb/", data=player_data_obj
@@ -280,12 +331,19 @@ def get_data():
                             "team": player_team,
                             "position": player_position,
                             "age_group": age_group,
+                            "recent_player_game_date": date_correct,
                         }
 
                         # Scrapping season stats
                         for column in player_season_stat_table_body_columns:
                             column_name = column.get("data-stat")
 
+                            if column_name == "rush_att":
+                                season_player_rush_att = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_att"
+                                ] = season_player_rush_att
+                                continue
                             if column_name == "rush_yds":
                                 season_player_rush_yds = str(column.text)
                                 player_data_obj[
@@ -319,6 +377,12 @@ def get_data():
                                 player_data_obj[
                                     "season_player_rec_td"
                                 ] = season_player_rec_td
+                                break
+                            if column_name == "off_pct":
+                                season_player_off_pct = str(column.text)
+                                player_data_obj[
+                                    "season_player_off_pct"
+                                ] = season_player_off_pct
                                 break
 
                         # Scrapping recent game stats
@@ -401,6 +465,7 @@ def get_data():
                             "team": player_team,
                             "position": player_position,
                             "age_group": age_group,
+                            "recent_player_game_date": date_correct,
                         }
 
                         # Scrapping season stats
@@ -428,6 +493,12 @@ def get_data():
                                 player_data_obj[
                                     "season_player_rec_td"
                                 ] = season_player_rec_td
+                                break
+                            if column_name == "off_pct":
+                                season_player_off_pct = str(column.text)
+                                player_data_obj[
+                                    "season_player_off_pct"
+                                ] = season_player_off_pct
                                 break
 
                         # Scrapping recent game stats

@@ -54,7 +54,6 @@ def get_data():
 
         # Get the player's team name
         player_team = str(player_stat_page[1].text)
-        print(player_team)
 
         # Get the player age
         player_age_columns = row.find_all("td")

@@ -53,8 +53,7 @@ def get_data():
         player_name = player_stat_page_link.text
 
         # Get the player's team name
-        player_team = player_stat_page[1].find("a")
-        player_team = str(player_team.text)
+        player_team = str(player_stat_page[1].text)
         print(player_team)
 
         # Get the player age

@@ -172,6 +172,7 @@ def get_data():
                     if player_position == "QB":
 
                         # Get data values from the player_season_rush_stat_table
+                        print(player_name)
                         player_season_rush_stat_table_body = (
                             player_season_rush_stat_table.find("tbody")
                         )

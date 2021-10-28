@@ -55,6 +55,7 @@ def get_data():
         # Get the player's team name
         player_team = player_stat_page[1].find("a")
         player_team = str(player_team.text)
+        print(player_team)
 
         # Get the player age
         player_age_columns = row.find_all("td")
@@ -563,5 +564,5 @@ def get_data():
             continue
 
 
-# requests.get("http://127.0.0.1:8000/ep/end/")
+requests.get("http://127.0.0.1:8000/ep/end/")
 get_data()

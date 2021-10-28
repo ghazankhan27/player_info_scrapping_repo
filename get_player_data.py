@@ -45,12 +45,16 @@ def get_data():
             continue
 
         # Get the link to the players page
-        player_stat_page = row.find("td", class_="left")
-        player_stat_page_link = player_stat_page.find("a")
+        player_stat_page = row.find_all("td", class_="left")
+        player_stat_page_link = player_stat_page[0].find("a")
         player_stat_page_link_text = str(player_stat_page_link.get("href"))
 
         # Get the player name
         player_name = player_stat_page_link.text
+
+        # Get the player's team name
+        player_team = player_stat_page[1].find("a")
+        player_team = str(player_team.text)
 
         # Get the player age
         player_age_columns = row.find_all("td")
@@ -70,7 +74,7 @@ def get_data():
         player_data_soup = BeautifulSoup(player_data_page.content, "lxml")
         player_data_soup.prettify()
 
-        # Get the player data from meta data area i.e Team name and Position
+        # Get the player data from meta data area i.e Position
         player_data_meta = player_data_soup.find("div", id="meta")
         player_data_meta_data = player_data_meta.find_all("p")
         for meta_data in player_data_meta_data:
@@ -80,9 +84,6 @@ def get_data():
                     player_position = data.split()
                     player_position = player_position[1]
                     continue
-                if "Team" in data:
-                    player_team = data.replace("Team: ", "")
-                    break
             except:
                 continue
 
@@ -562,5 +563,5 @@ def get_data():
             continue
 
 
-requests.get("http://127.0.0.1:8000/ep/end/")
+# requests.get("http://127.0.0.1:8000/ep/end/")
 get_data()

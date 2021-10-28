@@ -350,6 +350,12 @@ def get_data():
                                     "season_player_rush_yds"
                                 ] = season_player_rush_yds
                                 continue
+                            if column_name == "rush_td":
+                                season_player_rush_td = str(column.text)
+                                player_data_obj[
+                                    "season_player_rush_td"
+                                ] = season_player_rush_td
+                                continue
                             if column_name == "rush_yds_per_att":
                                 season_player_rush_yds_per_att = str(column.text)
                                 player_data_obj[
@@ -521,11 +527,11 @@ def get_data():
                                     "recent_player_rec_yds"
                                 ] = recent_player_rec_yds
                                 continue
-                            if column_name == "rush_td":
-                                recent_player_rush_td = str(column.text)
+                            if column_name == "rec_td":
+                                recent_player_rec_td = str(column.text)
                                 player_data_obj[
-                                    "recent_player_rush_td"
-                                ] = recent_player_rush_td
+                                    "recent_player_rec_td"
+                                ] = recent_player_rec_td
                                 continue
                             if column_name == "off_pct":
                                 recent_player_off_pct = str(column.text)

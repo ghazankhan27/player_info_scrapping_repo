@@ -187,9 +187,12 @@ def get_data():
                                 column_name = column.get("data-stat")
                                 if column_name == "off_pct":
                                     off_pct = str(column.text)
-                                    off_pct = int(off_pct.replace("%", ""))
-                                    off_pct_total = off_pct_total + off_pct
-                                    total_games = total_games + 1
+                                    if off_pct == None or off_pct == "":
+                                        continue
+                                    else:
+                                        off_pct = int(off_pct.replace("%", ""))
+                                        off_pct_total = off_pct_total + off_pct
+                                        total_games = total_games + 1
                         season_player_off_pct = (
                             str(int(off_pct_total / total_games)) + "%"
                         )
@@ -574,6 +577,8 @@ def get_data():
 
                         except Exception as e:
                             print(e)
+
+                    print(player_data_obj["season_player_off_pct"])
 
             else:
                 continue

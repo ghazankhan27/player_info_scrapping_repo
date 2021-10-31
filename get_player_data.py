@@ -171,6 +171,29 @@ def get_data():
                     else:
                         age_group = "3rd year"
 
+                    # Calculate season_off_pct if player is RB/TE/WR
+                    off_pct_total = 0
+                    total_games = 0
+                    if (
+                        player_position == "RB"
+                        or player_position == "TE"
+                        or player_position == "WR"
+                    ):
+                        for row in recent_game_stats_table_body_rows:
+                            recent_game_stats_table_body_row_columns = row.find_all(
+                                "td"
+                            )
+                            for column in recent_game_stats_table_body_row_columns:
+                                column_name = column.get("data-stat")
+                                if column_name == "off_pct":
+                                    off_pct = str(column.text)
+                                    off_pct = int(off_pct.replace("%", ""))
+                                    off_pct_total = off_pct_total + off_pct
+                                    total_games = total_games + 1
+                        season_player_off_pct = (
+                            str(int(off_pct_total / total_games)) + "%"
+                        )
+
                     # Player data is valid and should be scrapped, position : QB
                     if player_position == "QB":
 
@@ -389,12 +412,8 @@ def get_data():
                                     "season_player_rec_td"
                                 ] = season_player_rec_td
                                 break
-                            if column_name == "off_pct":
-                                season_player_off_pct = str(column.text)
-                                player_data_obj[
-                                    "season_player_off_pct"
-                                ] = season_player_off_pct
-                                break
+
+                        player_data_obj["season_player_off_pct"] = season_player_off_pct
 
                         # Scrapping recent game stats
                         for column in player_recent_stats_table_columns:
@@ -505,12 +524,7 @@ def get_data():
                                     "season_player_rec_td"
                                 ] = season_player_rec_td
                                 break
-                            if column_name == "off_pct":
-                                season_player_off_pct = str(column.text)
-                                player_data_obj[
-                                    "season_player_off_pct"
-                                ] = season_player_off_pct
-                                break
+                        player_data_obj["season_player_off_pct"] = season_player_off_pct
 
                         # Scrapping recent game stats
                         for column in player_recent_stats_table_columns:

@@ -196,7 +196,6 @@ def get_data():
                         season_player_off_pct = (
                             str(int(off_pct_total / total_games)) + "%"
                         )
-                        print(player_name, season_player_off_pct)
 
                     # Player data is valid and should be scrapped, position : QB
                     if player_position == "QB":
